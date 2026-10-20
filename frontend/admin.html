@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel da Barbearia - Gestão, Follow-up e Venda Rápida</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --accent-color: #38bdf8;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --success: #22c55e;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .header {
+            max-width: 1200px;
+            margin: 0 auto 20px auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #334155;
+            padding-bottom: 15px;
+        }
+
+        h1 {
+            color: var(--accent-color);
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .btn-atualizar {
+            background: var(--accent-color);
+            color: #0f172a;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        /* CARD DE RESUMO FINANCEIRO */
+        .card-painel {
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border: 1px solid #334155;
+            border-left: 4px solid var(--success);
+        }
+
+        .card-painel h2 {
+            margin-top: 0;
+            font-size: 18px;
+            color: var(--accent-color);
+            margin-bottom: 15px;
+        }
+
+        .grid-faturamento {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            text-align: center;
+        }
+
+        .box-fat {
+            background: rgba(15, 23, 42, 0.6);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+        }
+
+        .box-fat span {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        /* PAINEL DE VENDA RÁPIDA / ENCAIXE */
+        .secao-venda-rapida {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #334155;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .form-encaixe {
+            display: grid;
+            grid-template-columns: 2fr 1fr auto;
+            gap: 10px;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        /* SEÇÃO DE FOLLOW-UP */
+        .secao-followup {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #334155;
+            border-left: 4px solid var(--warning);
+        }
+
+        .btn-followup-toggle {
+            background: var(--warning);
+            color: #0f172a;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-weight: 800;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .lista-inativos {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .card-inativo {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* CRONOGRAMA SEMANAL */
+        .secao-semanal {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #334155;
+        }
+
+        .grid-semana {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .coluna-dia {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 12px;
+            min-height: 250px;
+        }
+
+        .coluna-dia.hoje {
+            border: 2px solid var(--accent-color);
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+        }
+
+        .titulo-dia {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--accent-color);
+            text-transform: uppercase;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .card-cliente-agendado {
+            background: #1e293b;
+            border-radius: 6px;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-left: 3px solid var(--warning);
+            font-size: 13px;
+        }
+
+        .card-cliente-agendado.concluido { border-left-color: var(--success); }
+        .card-cliente-agendado.cancelado { border-left-color: var(--danger); opacity: 0.6; }
+
+        .card-cliente-agendado .horario {
+            font-weight: 800;
+            color: var(--accent-color);
+            font-size: 14px;
+        }
+
+        .card-cliente-agendado .nome-cliente {
+            font-weight: bold;
+            color: var(--text-main);
+            margin: 4px 0;
+        }
+
+        .acoes-card {
+            margin-top: 8px;
+            display: flex;
+            gap: 5px;
+        }
+
+        /* CATÁLOGO DE CORTES */
+        .tabela-container {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border: 1px solid #334155;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        th {
+            background: #0f172a;
+            color: var(--accent-color);
+            padding: 12px;
+            border-bottom: 2px solid #334155;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #334155;
+        }
+
+        .btn-acao {
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 11px;
+        }
+
+        .btn-concluir { background: var(--success); color: white; }
+        .btn-cancelar-adm { background: var(--danger); color: white; }
+
+        .zap-link {
+            color: #4ade80;
+            text-decoration: none;
+            font-weight: bold;
+            display: inline-block;
+            font-size: 12px;
+        }
+        .zap-link:hover { text-decoration: underline; }
+
+        .img-miniatura {
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+
+        .form-servico {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 2fr auto;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        input, select {
+            padding: 10px;
+            background: #0f172a;
+            border: 1px solid #475569;
+            border-radius: 6px;
+            color: var(--text-main);
+            font-size: 14px;
+        }
+
+        .btn-cadastrar {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>💈 Painel de Gestão e Caixa</h1>
+        <button class="btn-atualizar" onclick="carregarDados()">🔄 Atualizar Dados</button>
+    </div>
+
+    <div class="container">
+
+        <!-- 1. RESUMO FINANCEIRO -->
+        <div class="card-painel">
+            <h2>💰 Relatório de Faturamento Líquido</h2>
+            <div class="grid-faturamento">
+                <div class="box-fat">
+                    <span>Receita de Hoje</span>
+                    <h3 id="faturamento-dia" style="color: var(--success); font-size: 22px; margin: 5px 0 0 0;">R$ 0,00</h3>
+                </div>
+                <div class="box-fat">
+                    <span>Mês Atual</span>
+                    <h3 id="faturamento-mes" style="color: var(--accent-color); font-size: 22px; margin: 5px 0 0 0;">R$ 0,00</h3>
+                </div>
+                <div class="box-fat">
+                    <span>Mês Passado</span>
+                    <h3 id="faturamento-mes-passado" style="color: var(--warning); font-size: 22px; margin: 5px 0 0 0;">R$ 0,00</h3>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. NOVO: VENDA RÁPIDA / ENCAIXE DE BALCÃO -->
+        <div class="secao-venda-rapida">
+            <h2 style="color: var(--accent-color); margin: 0; font-size: 18px;">⚡ Venda Rápida / Encaixe de Balcão</h2>
+            <p style="color: var(--text-muted); font-size: 13px; margin: 5px 0 10px 0;">Entrou cliente da rua sem agendamento? Lance aqui para somar direto no faturamento de hoje.</p>
+            <form class="form-encaixe" onsubmit="registrarEncaixe(event)">
+                <select id="select-servico-encaixe" required>
+                    <option value="">Selecione o serviço realizado...</option>
+                </select>
+                <input type="text" id="nome-cliente-encaixe" placeholder="Nome do Cliente (Opcional)" value="Cliente Encaixe/Balcão">
+                <button type="submit" class="btn-cadastrar">⚡ Lançar no Faturamento</button>
+            </form>
+        </div>
+
+        <!-- 3. SEÇÃO DE FOLLOW-UP (CLIENTES > 3 MESES) -->
+        <div class="secao-followup">
+            <h2 style="color: var(--warning); margin: 0; font-size: 18px;">🎯 Campanha de Reengajamento (Follow-up)</h2>
+            <p style="color: var(--text-muted); font-size: 13px; margin: 5px 0 10px 0;">Clientes que não cortam cabelo há mais de 3 meses (+90 dias).</p>
+            <button class="btn-followup-toggle" onclick="toggleFollowUp()">🔍 Ver Clientes Inativos (+90 dias)</button>
+            
+            <div id="painel-inativos" style="display: none;">
+                <div class="lista-inativos" id="grid-inativos"></div>
+            </div>
+        </div>
+
+        <!-- 4. CRONOGRAMA SEMANAL -->
+        <div class="secao-semanal">
+            <h2 style="color: var(--accent-color); margin: 0; font-size: 18px;">📅 Cronograma da Semana</h2>
+            <div class="grid-semana" id="grid-semanal-container"></div>
+        </div>
+
+        <!-- 5. CATÁLOGO DE CORTES -->
+        <div class="tabela-container">
+            <h2 style="color: var(--accent-color); margin-top: 0; font-size: 18px;">✂️ Gerenciar Catálogo de Cortes</h2>
+            <form id="form-novo-servico" class="form-servico" onsubmit="cadastrarServico(event)">
+                <input type="text" id="novo-nome" placeholder="Nome do Corte" required>
+                <input type="number" step="0.01" id="novo-preco" placeholder="Preço (R$)" required>
+                <select id="nova-categoria">
+                    <option value="masculino">Masculino</option>
+                    <option value="feminino">Feminino</option>
+                </select>
+                <input type="text" id="nova-imagem" placeholder="URL da Foto (Opcional)">
+                <button type="submit" class="btn-cadastrar">+ Adicionar</button>
+            </form>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Foto</th>
+                        <th>Nome</th>
+                        <th>Categoria</th>
+                        <th>Preço</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="tabela-servicos-body">
+                    <tr><td colspan="5" style="text-align: center; color: var(--text-muted);">Carregando serviços...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <script>
+        let listaGlobalServicos = [];
+        let listaGlobalAgendamentos = [];
+
+        window.addEventListener('DOMContentLoaded', carregarDados);
+
+        function carregarDados() {
+            carregarServicosAdmin();
+            carregarAgendamentos();
+        }
+
+        async function carregarServicosAdmin() {
+            const tbody = document.getElementById('tabela-servicos-body');
+            const selectEncaixe = document.getElementById('select-servico-encaixe');
+            try {
+                const resposta = await fetch('http://localhost:3000/servicos');
+                listaGlobalServicos = await resposta.json();
+
+                selectEncaixe.innerHTML = '<option value="">Selecione o serviço realizado...</option>';
+                listaGlobalServicos.forEach(s => {
+                    selectEncaixe.innerHTML += `<option value="${s.id}">${s.nome} - R$ ${parseFloat(s.preco).toFixed(2)}</option>`;
+                });
+
+                if (listaGlobalServicos.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Nenhum serviço cadastrado.</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = '';
+                listaGlobalServicos.forEach(s => {
+                    const tr = document.createElement('tr');
+                    const img = s.imagem_url || 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=300';
+                    tr.innerHTML = `
+                        <td><img src="${img}" class="img-miniatura" alt="${s.nome}"></td>
+                        <td><strong>${s.nome}</strong></td>
+                        <td><span style="color: var(--accent-color); font-weight: bold;">${s.categoria || 'masculino'}</span></td>
+                        <td>R$ ${parseFloat(s.preco).toFixed(2).replace('.', ',')}</td>
+                        <td>
+                            <button class="btn-acao btn-cancelar-adm" onclick="deletarServico(${s.id})">🗑️ Excluir</button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (erro) {
+                console.error("Erro ao carregar serviços:", erro);
+            }
+        }
+
+        // REGISTRAR VENDA RÁPIDA / ENCAIXE DE BALCÃO
+        async function registrarEncaixe(e) {
+            e.preventDefault();
+            const servicoId = document.getElementById('select-servico-encaixe').value;
+            const nomeCliente = document.getElementById('nome-cliente-encaixe').value || 'Cliente Balcão';
+
+            if (!servicoId) {
+                alert("Selecione um serviço para o encaixe.");
+                return;
+            }
+
+            try {
+                // Cria um agendamento com data atual e status direto como 'concluido'
+                const resposta = await fetch('http://localhost:3000/agendamentos', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        nome: nomeCliente,
+                        telefone: '00000000000',
+                        servico_id: parseInt(servicoId),
+                        data_hora: new Date().toISOString(),
+                        status: 'concluido'
+                    })
+                });
+
+                if (resposta.ok) {
+                    document.getElementById('select-servico-encaixe').value = '';
+                    document.getElementById('nome-cliente-encaixe').value = 'Cliente Encaixe/Balcão';
+                    carregarAgendamentos();
+                    alert("⚡ Venda rápida lançada com sucesso no faturamento de hoje!");
+                } else {
+                    alert("Erro ao registrar encaixe.");
+                }
+            } catch (erro) {
+                console.error("Erro ao registrar encaixe:", erro);
+            }
+        }
+
+        async function cadastrarServico(e) {
+            e.preventDefault();
+            const nome = document.getElementById('novo-nome').value;
+            const preco = parseFloat(document.getElementById('novo-preco').value);
+            const categoria = document.getElementById('nova-categoria').value;
+            const imagem_url = document.getElementById('nova-imagem').value;
+
+            try {
+                const resposta = await fetch('http://localhost:3000/servicos', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nome, preco, categoria, imagem_url })
+                });
+
+                if (resposta.ok) {
+                    document.getElementById('form-novo-servico').reset();
+                    carregarServicosAdmin();
+                }
+            } catch (erro) {
+                console.error("Erro ao cadastrar serviço:", erro);
+            }
+        }
+
+        async function deletarServico(id) {
+            if (confirm("Tem certeza que deseja apagar este corte?")) {
+                try {
+                    await fetch(`http://localhost:3000/servicos/${id}`, { method: 'DELETE' });
+                    carregarServicosAdmin();
+                } catch (erro) {
+                    console.error("Erro ao excluir serviço:", erro);
+                }
+            }
+        }
+
+        async function carregarAgendamentos() {
+            try {
+                const resposta = await fetch('http://localhost:3000/agendamentos');
+                listaGlobalAgendamentos = await resposta.json();
+
+                calcularFaturamento(listaGlobalAgendamentos);
+                renderizarCronogramaSemanal(listaGlobalAgendamentos);
+                processarClientesInativos(listaGlobalAgendamentos);
+
+            } catch (erro) {
+                console.error("Erro ao carregar agendamentos:", erro);
+            }
+        }
+
+        function toggleFollowUp() {
+            const painel = document.getElementById('painel-inativos');
+            painel.style.display = painel.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function processarClientesInativos(lista) {
+            const containerInativos = document.getElementById('grid-inativos');
+            containerInativos.innerHTML = '';
+
+            const agora = new Date();
+            const mapaClientes = {};
+
+            lista.forEach(item => {
+                if ((item.status || '').toLowerCase() === 'concluido' && item.cliente_telefone !== '00000000000') {
+                    const chave = item.cliente_telefone;
+                    const dataAtendimento = new Date(item.data_hora);
+
+                    if (!mapaClientes[chave] || dataAtendimento > mapaClientes[chave].ultimaData) {
+                        mapaClientes[chave] = {
+                            nome: item.cliente_nome,
+                            telefone: item.cliente_telefone,
+                            ultimaData: dataAtendimento
+                        };
+                    }
+                }
+            });
+
+            let contadorInativos = 0;
+            const noventaDiasMs = 90 * 24 * 60 * 60 * 1000;
+
+            Object.values(mapaClientes).forEach(cliente => {
+                const diferencaTempo = agora - cliente.ultimaData;
+                const diasSemCortar = Math.floor(diferencaTempo / (1000 * 60 * 60 * 24));
+
+                if (diferencaTempo >= noventaDiasMs) {
+                    contadorInativos++;
+                    const dataFormatada = cliente.ultimaData.toLocaleDateString('pt-BR');
+                    const telefoneLimpo = cliente.telefone.replace(/\D/g,'');
+                    const mensagemZap = encodeURIComponent(`Olá ${cliente.nome}, tudo bem? Notei que já faz um tempinho (${diasSemCurtar} dias) que você não dá um trato no visual aqui na barbearia. Que tal agendar um horário esta semana? ✂️💈`);
+
+                    const div = document.createElement('div');
+                    div.className = 'card-inativo';
+                    div.innerHTML = `
+                        <div style="font-weight: bold; color: var(--text-main);">${cliente.nome}</div>
+                        <div style="font-size: 12px; color: var(--text-muted);">Último corte: ${dataFormatada} (há ${diasSemCortar} dias)</div>
+                        <a class="zap-link" href="https://wa.me/55${telefoneLimpo}?text=${mensagemZap}" target="_blank">
+                            💬 Enviar Follow-up WhatsApp
+                        </a>
+                    `;
+                    containerInativos.appendChild(div);
+                }
+            });
+
+            if (contadorInativos === 0) {
+                containerInativos.innerHTML = '<p style="color: var(--text-muted); font-size: 13px; grid-column: 1 / -1;">Nenhum cliente inativo há mais de 3 meses encontrado.</p>';
+            }
+        }
+
+        function renderizarCronogramaSemanal(lista) {
+            const container = document.getElementById('grid-semanal-container');
+            container.innerHTML = '';
+
+            const diasSemana = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+            const hojeIndice = new Date().getDay();
+            const agendamentosPorDia = { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [] };
+
+            lista.forEach(item => {
+                const data = new Date(item.data_hora);
+                agendamentosPorDia[data.getDay()].push(item);
+            });
+
+            diasSemana.forEach((nomeDia, i) => {
+                const ehHoje = i === hojeIndice;
+                const divColuna = document.createElement('div');
+                divColuna.className = `coluna-dia ${ehHoje ? 'hoje' : ''}`;
+
+                const listaDoDia = agendamentosPorDia[i] || [];
+                listaDoDia.sort((a, b) => new Date(a.data_hora) - new Date(b.data_hora));
+
+                let cardsHTML = '';
+                if (listaDoDia.length === 0) {
+                    cardsHTML = '<p style="color: var(--text-muted); font-size: 12px; text-align: center; margin-top: 20px;">Sem horários.</p>';
+                } else {
+                    listaDoDia.forEach(item => {
+                        const dataObj = new Date(item.data_hora);
+                        const hora = dataObj.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+                        const statusClass = (item.status || 'agendado').toLowerCase();
+
+                        cardsHTML += `
+                            <div class="card-cliente-agendado ${statusClass}">
+                                <div class="horario">⏰ ${hora}</div>
+                                <div class="nome-cliente">${item.cliente_nome}</div>
+                                <div style="color: var(--text-muted); font-size: 12px;">✂️ ${item.servico_nome}</div>
+                                ${item.cliente_telefone !== '00000000000' ? `
+                                    <a class="zap-link" href="https://wa.me/55${item.cliente_telefone.replace(/\D/g,'')}" target="_blank">📱 WhatsApp</a>
+                                ` : ''}
+                                <div class="acoes-card">
+                                    ${statusClass === 'agendado' ? `
+                                        <button class="btn-acao btn-concluir" onclick="alterarStatus(${item.id}, 'concluido')">✓ Concluir</button>
+                                        <button class="btn-acao btn-cancelar-adm" onclick="alterarStatus(${item.id}, 'cancelado')">✕</button>
+                                    ` : `<span style="font-size:10px; font-weight:bold; text-transform:uppercase;">${statusClass}</span>`}
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+
+                divColuna.innerHTML = `
+                    <div class="titulo-dia">
+                        <span>${nomeDia}</span>
+                        ${ehHoje ? '<span style="color: var(--success); font-size:10px;">HOJE</span>' : ''}
+                    </div>
+                    ${cardsHTML}
+                `;
+                container.appendChild(divColuna);
+            });
+        }
+
+        function calcularFaturamento(lista) {
+            let totalDia = 0;
+            let totalMesAtual = 0;
+            let totalMesPassado = 0;
+
+            const agora = new Date();
+            const hojeStr = agora.toISOString().split('T')[0];
+            const mesAtual = agora.getMonth();
+            const anoAtual = agora.getFullYear();
+
+            let mesPassado = mesAtual - 1;
+            let anoDoMesPassado = anoAtual;
+            if (mesPassado < 0) {
+                mesPassado = 11;
+                anoDoMesPassado = anoAtual - 1;
+            }
+
+            lista.forEach(item => {
+                if ((item.status || '').toLowerCase() === 'concluido') {
+                    const preco = parseFloat(item.servico_preco) || 0;
+                    const dataAgendamento = new Date(item.data_hora);
+                    const dataStr = dataAgendamento.toISOString().split('T')[0];
+
+                    if (dataStr === hojeStr) totalDia += preco;
+                    if (dataAgendamento.getMonth() === mesAtual && dataAgendamento.getFullYear() === anoAtual) totalMesAtual += preco;
+                    if (dataAgendamento.getMonth() === mesPassado && dataAgendamento.getFullYear() === anoDoMesPassado) totalMesPassado += preco;
+                }
+            });
+
+            document.getElementById('faturamento-dia').textContent = `R$ ${totalDia.toFixed(2).replace('.', ',')}`;
+            document.getElementById('faturamento-mes').textContent = `R$ ${totalMesAtual.toFixed(2).replace('.', ',')}`;
+            document.getElementById('faturamento-mes-passado').textContent = `R$ ${totalMesPassado.toFixed(2).replace('.', ',')}`;
+        }
+
+        async function alterarStatus(id, novoStatus) {
+            try {
+                const resposta = await fetch(`http://localhost:3000/agendamentos/${id}`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: novoStatus })
+                });
+
+                if (resposta.ok) carregarAgendamentos();
+            } catch (erro) {
+                console.error("Erro ao alterar status:", erro);
+            }
+        }
+    </script>
+</body>
+</html>

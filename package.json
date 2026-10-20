@@ -1,0 +1,24 @@
+{
+  "name": "barbearia-saas-api",
+  "version": "1.0.0",
+  "description": "API profissional e multi-tenant para gestão de barbearias e assinaturas SaaS.",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js"
+  },
+  "keywords": [
+    "barbearia",
+    "saas",
+    "agendamento",
+    "multi-tenant"
+  ],
+  "author": "Osmar Albuquerque",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.8",
+    "express": "^5.3.0",
+    "pg": "^8.23.1"
+  }
+}

@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Admin - Gestão de Licenças e Assinaturas SaaS</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --accent-color: #38bdf8;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --success: #22c55e;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .header {
+            max-width: 1250px;
+            margin: 0 auto 20px auto;
+            border-bottom: 2px solid #334155;
+            padding-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        h1 { color: var(--accent-color); margin: 0; font-size: 24px; }
+
+        .btn-atualizar {
+            background: var(--accent-color);
+            color: #0f172a;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .container {
+            max-width: 1250px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .card-tabela {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #334155;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 14px;
+            margin-top: 15px;
+        }
+
+        th {
+            background: #0f172a;
+            color: var(--accent-color);
+            padding: 12px;
+            border-bottom: 2px solid #334155;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #334155;
+        }
+
+        .badge {
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+        .badge.ativo { background: rgba(34, 197, 94, 0.2); color: var(--success); border: 1px solid var(--success); }
+        .badge.bloqueado { background: rgba(239, 68, 68, 0.2); color: var(--danger); border: 1px solid var(--danger); }
+        .badge.cortesia { background: rgba(245, 158, 11, 0.2); color: var(--warning); border: 1px solid var(--warning); }
+        .badge.cortesia_temporaria { background: rgba(56, 189, 248, 0.2); color: var(--accent-color); border: 1px solid var(--accent-color); }
+
+        .grupo-acoes {
+            display: flex;
+            gap: 5px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .btn-acao {
+            border: none;
+            padding: 6px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 11px;
+            transition: 0.2s;
+        }
+        .btn-liberar { background: var(--success); color: white; }
+        .btn-cortesia { background: var(--warning); color: #0f172a; }
+        .btn-cortesia-temp { background: var(--accent-color); color: #0f172a; }
+        .btn-bloquear { background: var(--danger); color: white; }
+        .btn-editar { background: #64748b; color: white; }
+        .btn-pix { background: #8b5cf6; color: white; }
+
+        /* FORMULÁRIO E MURAL DE FEEDBACK */
+        .form-feedback {
+            background: #0f172a;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            margin-bottom: 15px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr auto;
+            gap: 10px;
+            align-items: center;
+        }
+
+        input, select, textarea {
+            padding: 10px;
+            background: #1e293b;
+            border: 1px solid #475569;
+            border-radius: 6px;
+            color: var(--text-main);
+            font-size: 13px;
+        }
+
+        .btn-enviar-fb {
+            background: var(--accent-color);
+            color: #0f172a;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .grid-feedbacks {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .card-feedback {
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .card-feedback .autor {
+            font-weight: bold;
+            color: var(--accent-color);
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .card-feedback .tipo-badge {
+            font-size: 10px;
+            background: #334155;
+            padding: 2px 6px;
+            border-radius: 4px;
+            color: var(--text-main);
+        }
+
+        .card-feedback .estrelas { color: #facc15; font-size: 14px; }
+        .card-feedback .comentario { color: var(--text-main); font-size: 13px; line-height: 1.4; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div>
+            <h1>👑 Painel Master (SaaS Control - Osmar)</h1>
+            <p style="color: var(--text-muted); font-size: 13px; margin: 5px 0 0 0;">Gestão real integrada ao PostgreSQL para licenças, vencimentos e feedbacks.</p>
+        </div>
+        <button class="btn-atualizar" onclick="carregarPainelMaster()">🔄 Atualizar</button>
+    </div>
+
+    <div class="container">
+
+        <!-- 1. TABELA DE CLIENTES SAAS -->
+        <div class="card-tabela">
+            <h2 style="color: var(--accent-color); margin-top: 0; font-size: 18px;">📋 Barbearias Vinculadas & Validade de Licenças</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Barbearia</th>
+                        <th>Plano / Valor</th>
+                        <th>Vencimento</th>
+                        <th>Status do Acesso</th>
+                        <th>Ações de Licença & Cobrança</th>
+                    </tr>
+                </thead>
+                <tbody id="tabela-clientes-body">
+                    <tr><td colspan="6" style="text-align: center; color: var(--text-muted);">Carregando do banco de dados...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 2. MURAL DE FEEDBACKS -->
+        <div class="card-tabela">
+            <h2 style="color: var(--accent-color); margin-top: 0; font-size: 18px;">💬 Mural de Feedbacks & Depoimentos</h2>
+            <form class="form-feedback" onsubmit="adicionarFeedback(event)">
+                <input type="text" id="fb-autor" placeholder="Nome (Ex: Barbearia VIP)" required>
+                <select id="fb-tipo" required>
+                    <option value="Barbeiro">💈 Sou Barbeiro</option>
+                    <option value="Cliente">✂️ Sou Cliente Final</option>
+                </select>
+                <select id="fb-nota" required>
+                    <option value="5">⭐⭐⭐⭐⭐ (5/5)</option>
+                    <option value="4">⭐⭐⭐⭐ (4/5)</option>
+                    <option value="3">⭐⭐⭐ (3/5)</option>
+                </select>
+                <button type="submit" class="btn-enviar-fb">+ Adicionar Feedback</button>
+            </form>
+
+            <div class="grid-feedbacks" id="lista-feedbacks">
+                <p style="color: var(--text-muted); font-size: 13px;">Carregando feedbacks...</p>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            carregarPainelMaster();
+            carregarFeedbacks();
+        });
+
+        // BUSCAR BARBEARIAS DO BANCO DE DADOS
+        async function carregarPainelMaster() {
+            const tbody = document.getElementById('tabela-clientes-body');
+            try {
+                const resposta = await fetch('http://localhost:3000/saas/barbearias');
+                const clientes = await resposta.json();
+
+                if (clientes.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Nenhuma barbearia cadastrada.</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = '';
+                clientes.forEach(c => {
+                    let badgeTexto = c.status;
+                    if (c.status === 'cortesia_temporaria') badgeTexto = 'Cortesia (Temp)';
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>#${c.id}</td>
+                        <td>
+                            <strong>${c.nome_barbearia}</strong><br>
+                            <span style="font-size: 11px; color: var(--text-muted);">Resp: ${c.responsavel} | WhatsApp: ${c.whatsapp}</span>
+                        </td>
+                        <td><strong>R$ ${parseFloat(c.valor_plano).toFixed(2).replace('.', ',')}</strong> /mês</td>
+                        <td>
+                            Dia <strong>${c.vencimento_dia || 10}</strong> de cada mês<br>
+                            ${c.expira_em ? `<span style="font-size:10px; color:var(--warning);">Expira em: ${c.expira_em.split('T')[0]}</span>` : ''}
+                        </td>
+                        <td><span class="badge ${c.status}">${badgeTexto}</span></td>
+                        <td>
+                            <div class="grupo-acoes">
+                                <button class="btn-acao btn-editar" onclick="editarConfig(${c.id}, ${c.valor_plano}, ${c.vencimento_dia || 10})">⚙️ Ajustes</button>
+                                <button class="btn-acao btn-liberar" onclick="atualizarLicenca(${c.id}, { status: 'ativo', valor_plano: 50.00 })">🔓 Ativar</button>
+                                <button class="btn-acao btn-cortesia-temp" onclick="darCortesiaTemporaria(${c.id})">⏳ 30d</button>
+                                <button class="btn-acao btn-cortesia" onclick="atualizarLicenca(${c.id}, { status: 'cortesia', valor_plano: 0.00 })">🎁 VIP</button>
+                                <button class="btn-acao btn-bloquear" onclick="atualizarLicenca(${c.id}, { status: 'bloqueado' })">🔒 Bloquear</button>
+                                <button class="btn-acao btn-pix" onclick="gerarPixCobranca('${c.nome_barbearia}', ${c.valor_plano})">📱 Pix</button>
+                            </div>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (erro) {
+                console.error("Erro ao carregar painel master:", erro);
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--danger);">Erro ao conectar com o servidor.</td></tr>';
+            }
+        }
+
+        // ATUALIZAR DADOS DA LICENÇA NO BACKEND
+        async function atualizarLicenca(id, dadosAtualizados) {
+            try {
+                const resposta = await fetch(`http://localhost:3000/saas/barbearias/${id}`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dadosAtualizados)
+                });
+
+                if (resposta.ok) {
+                    carregarPainelMaster();
+                } else {
+                    alert("Erro ao atualizar licença.");
+                }
+            } catch (erro) {
+                console.error("Erro na requisição:", erro);
+            }
+        }
+
+        // EDITAR VALOR E VENCIMENTO
+        async function editarConfig(id, valorAtual, diaAtual) {
+            const novoValor = prompt(`Valor mensal da licença (R$):`, valorAtual);
+            const novoDia = prompt(`Dia de vencimento (5, 10, 15...):`, diaAtual);
+
+            if (novoValor !== null && novoDia !== null) {
+                await atualizarLicenca(id, {
+                    valor_plano: parseFloat(novoValor.replace(',', '.')),
+                    vencimento_dia: parseInt(novoDia, 10)
+                });
+            }
+        }
+
+        // CORTESIA TEMPORÁRIA
+        async function darCortesiaTemporaria(id) {
+            const dias = prompt("Quantos dias de cortesia temporária?", "30");
+            if (dias) {
+                const dataExp = new Date();
+                dataExp.setDate(dataExp.getDate() + parseInt(dias));
+                const dataStr = dataExp.toISOString().split('T')[0];
+
+                await atualizarLicenca(id, {
+                    status: 'cortesia_temporaria',
+                    expira_em: dataStr
+                });
+            }
+        }
+
+        function gerarPixCobranca(nomeBarbearia, valor) {
+            alert(`[Mercado Pago / Gateway]\nLink Pix gerado para ${nomeBarbearia}\nValor: R$ ${parseFloat(valor).toFixed(2).replace('.', ',')}\n\nAssim que o cliente pagar, o Webhook liberará o acesso automaticamente.`);
+        }
+
+        // BUSCAR E SALVAR FEEDBACKS NO BANCO
+        async function carregarFeedbacks() {
+            const container = document.getElementById('lista-feedbacks');
+            try {
+                const resposta = await fetch('http://localhost:3000/feedbacks');
+                const feedbacks = await resposta.json();
+
+                if (feedbacks.length === 0) {
+                    container.innerHTML = '<p style="color: var(--text-muted); font-size: 13px;">Nenhum feedback registrado.</p>';
+                    return;
+                }
+
+                container.innerHTML = '';
+                feedbacks.forEach(f => {
+                    const div = document.createElement('div');
+                    div.className = 'card-feedback';
+                    div.innerHTML = `
+                        <div class="autor"><span>${f.autor}</span><span class="tipo-badge">${f.tipo}</span></div>
+                        <div class="estrelas">${'⭐'.repeat(f.nota)}</div>
+                        <div class="comentario">"${f.comentario}"</div>
+                    `;
+                    container.appendChild(div);
+                });
+            } catch (erro) {
+                console.error("Erro ao carregar feedbacks:", erro);
+            }
+        }
+
+        async function adicionarFeedback(e) {
+            e.preventDefault();
+            const autor = document.getElementById('fb-autor').value;
+            const tipo = document.getElementById('fb-tipo').value;
+            const nota = parseInt(document.getElementById('fb-nota').value);
+            const comentario = prompt("Digite o comentário/feedback:");
+
+            if (comentario) {
+                try {
+                    await fetch('http://localhost:3000/feedbacks', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ autor, tipo, nota, comentario })
+                    });
+                    document.getElementById('fb-autor').value = '';
+                    carregarFeedbacks();
+                } catch (erro) {
+                    console.error("Erro ao salvar feedback:", erro);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
