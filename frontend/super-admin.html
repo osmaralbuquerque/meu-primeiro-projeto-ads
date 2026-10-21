@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Super Admin - Gestão de Licenças e Assinaturas SaaS</title>
+    <title>Super Admin - Gestão de Vencimentos e Licenças</title>
     <style>
         :root {
             --bg-color: #0f172a;
@@ -29,22 +29,9 @@
             margin: 0 auto 20px auto;
             border-bottom: 2px solid #334155;
             padding-bottom: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
         }
 
         h1 { color: var(--accent-color); margin: 0; font-size: 24px; }
-
-        .btn-atualizar {
-            background: var(--accent-color);
-            color: #0f172a;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-weight: 800;
-            cursor: pointer;
-        }
 
         .container {
             max-width: 1250px;
@@ -190,16 +177,13 @@
 <body>
 
     <div class="header">
-        <div>
-            <h1>👑 Painel Master (SaaS Control - Osmar)</h1>
-            <p style="color: var(--text-muted); font-size: 13px; margin: 5px 0 0 0;">Gestão real integrada ao PostgreSQL para licenças, vencimentos e feedbacks.</p>
-        </div>
-        <button class="btn-atualizar" onclick="carregarPainelMaster()">🔄 Atualizar</button>
+        <h1>👑 Painel Master (SaaS Control - Osmar)</h1>
+        <p style="color: var(--text-muted); font-size: 13px; margin: 5px 0 0 0;">Gestão de licenças, dias de vencimento (vencimento dia 5, 10, 15) e conversão de cortesias.</p>
     </div>
 
     <div class="container">
 
-        <!-- 1. TABELA DE CLIENTES SAAS -->
+        <!-- 1. GERENCIAMENTO DE LICENÇAS, VALORES E VENCIMENTOS -->
         <div class="card-tabela">
             <h2 style="color: var(--accent-color); margin-top: 0; font-size: 18px;">📋 Barbearias Vinculadas & Validade de Licenças</h2>
             <table>
@@ -214,7 +198,7 @@
                     </tr>
                 </thead>
                 <tbody id="tabela-clientes-body">
-                    <tr><td colspan="6" style="text-align: center; color: var(--text-muted);">Carregando do banco de dados...</td></tr>
+                    <tr><td colspan="6" style="text-align: center; color: var(--text-muted);">Carregando barbearias...</td></tr>
                 </tbody>
             </table>
         </div>
@@ -223,7 +207,7 @@
         <div class="card-tabela">
             <h2 style="color: var(--accent-color); margin-top: 0; font-size: 18px;">💬 Mural de Feedbacks & Depoimentos</h2>
             <form class="form-feedback" onsubmit="adicionarFeedback(event)">
-                <input type="text" id="fb-autor" placeholder="Nome (Ex: Barbearia VIP)" required>
+                <input type="text" id="fb-autor" placeholder="Nome (Ex: Barbearia VIP ou João Cliente)" required>
                 <select id="fb-tipo" required>
                     <option value="Barbeiro">💈 Sou Barbeiro</option>
                     <option value="Cliente">✂️ Sou Cliente Final</option>
@@ -236,148 +220,126 @@
                 <button type="submit" class="btn-enviar-fb">+ Adicionar Feedback</button>
             </form>
 
-            <div class="grid-feedbacks" id="lista-feedbacks">
-                <p style="color: var(--text-muted); font-size: 13px;">Carregando feedbacks...</p>
-            </div>
+            <div class="grid-feedbacks" id="lista-feedbacks"></div>
         </div>
 
     </div>
 
     <script>
+        let clientesSaaS = [
+            { id: 1, barbearia: 'Barbearia Estilo & Corte', responsavel: 'Osmar', valor: 0.00, vencimentoDia: 10, status: 'cortesia' },
+            { id: 2, barbearia: 'Barbearia Central', responsavel: 'Carlos Silva', valor: 50.00, vencimentoDia: 5, status: 'ativo' },
+            { id: 3, barbearia: 'Rede Imperial Barber', responsavel: 'Roberto Mendes', valor: 1000.00, vencimentoDia: 15, status: 'ativo' },
+            { id: 4, barbearia: 'Barbearia do Bairro', responsavel: 'Marcos Souza', valor: 50.00, vencimentoDia: 10, status: 'cortesia_temporaria', expiraEm: '2026-05-10' }
+        ];
+
+        let listaFeedbacks = [
+            { id: 1, autor: 'Barbearia Estilo & Corte', tipo: 'Barbeiro', nota: 5, comentario: 'O sistema organizou minha agenda e o follow-up recuperou vários clientes inativos!' },
+            { id: 2, autor: 'Lucas Andrade', tipo: 'Cliente', nota: 5, comentario: 'Agendar pelo celular é rápido e prático demais.' }
+        ];
+
         window.addEventListener('DOMContentLoaded', () => {
-            carregarPainelMaster();
-            carregarFeedbacks();
+            renderizarClientes();
+            renderizarFeedbacks();
         });
 
-        // BUSCAR BARBEARIAS DO BANCO DE DADOS
-        async function carregarPainelMaster() {
+        function renderizarClientes() {
             const tbody = document.getElementById('tabela-clientes-body');
-            try {
-                const resposta = await fetch('http://localhost:3000/saas/barbearias');
-                const clientes = await resposta.json();
+            tbody.innerHTML = '';
 
-                if (clientes.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Nenhuma barbearia cadastrada.</td></tr>';
-                    return;
-                }
+            clientesSaaS.forEach(c => {
+                let badgeTexto = c.status;
+                if (c.status === 'cortesia_temporaria') badgeTexto = 'Cortesia (Temp)';
 
-                tbody.innerHTML = '';
-                clientes.forEach(c => {
-                    let badgeTexto = c.status;
-                    if (c.status === 'cortesia_temporaria') badgeTexto = 'Cortesia (Temp)';
-
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>#${c.id}</td>
-                        <td>
-                            <strong>${c.nome_barbearia}</strong><br>
-                            <span style="font-size: 11px; color: var(--text-muted);">Resp: ${c.responsavel} | WhatsApp: ${c.whatsapp}</span>
-                        </td>
-                        <td><strong>R$ ${parseFloat(c.valor_plano).toFixed(2).replace('.', ',')}</strong> /mês</td>
-                        <td>
-                            Dia <strong>${c.vencimento_dia || 10}</strong> de cada mês<br>
-                            ${c.expira_em ? `<span style="font-size:10px; color:var(--warning);">Expira em: ${c.expira_em.split('T')[0]}</span>` : ''}
-                        </td>
-                        <td><span class="badge ${c.status}">${badgeTexto}</span></td>
-                        <td>
-                            <div class="grupo-acoes">
-                                <button class="btn-acao btn-editar" onclick="editarConfig(${c.id}, ${c.valor_plano}, ${c.vencimento_dia || 10})">⚙️ Ajustes</button>
-                                <button class="btn-acao btn-liberar" onclick="atualizarLicenca(${c.id}, { status: 'ativo', valor_plano: 50.00 })">🔓 Ativar</button>
-                                <button class="btn-acao btn-cortesia-temp" onclick="darCortesiaTemporaria(${c.id})">⏳ 30d</button>
-                                <button class="btn-acao btn-cortesia" onclick="atualizarLicenca(${c.id}, { status: 'cortesia', valor_plano: 0.00 })">🎁 VIP</button>
-                                <button class="btn-acao btn-bloquear" onclick="atualizarLicenca(${c.id}, { status: 'bloqueado' })">🔒 Bloquear</button>
-                                <button class="btn-acao btn-pix" onclick="gerarPixCobranca('${c.nome_barbearia}', ${c.valor_plano})">📱 Pix</button>
-                            </div>
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            } catch (erro) {
-                console.error("Erro ao carregar painel master:", erro);
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--danger);">Erro ao conectar com o servidor.</td></tr>';
-            }
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>#${c.id}</td>
+                    <td>
+                        <strong>${c.barbearia}</strong><br>
+                        <span style="font-size: 11px; color: var(--text-muted);">Resp: ${c.responsavel}</span>
+                    </td>
+                    <td><strong>R$ ${parseFloat(c.valor).toFixed(2).replace('.', ',')}</strong> /mês</td>
+                    <td>
+                        Dia <strong>${c.vencimentoDia}</strong> de cada mês<br>
+                        ${c.expiraEm ? `<span style="font-size:10px; color:var(--warning);">Expira em: ${c.expiraEm}</span>` : ''}
+                    </td>
+                    <td><span class="badge ${c.status}">${badgeTexto}</span></td>
+                    <td>
+                        <div class="grupo-acoes">
+                            <button class="btn-acao btn-editar" onclick="editarConfig(${c.id})">⚙️ Ajustes</button>
+                            <button class="btn-acao btn-liberar" onclick="alterarStatus(${c.id}, 'ativo', 50.00)">🔓 Ativar Pago</button>
+                            <button class="btn-acao btn-cortesia-temp" onclick="darCortesiaTemporaria(${c.id})">⏳ Cortesia 30d</button>
+                            <button class="btn-acao btn-cortesia" onclick="alterarStatus(${c.id}, 'cortesia', 0.00)">🎁 Cortesia VIP</button>
+                            <button class="btn-acao btn-bloquear" onclick="alterarStatus(${c.id}, 'bloqueado')">🔒 Bloquear</button>
+                            <button class="btn-acao btn-pix" onclick="gerarPixCobranca(${c.id})">📱 Pix</button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
         }
 
-        // ATUALIZAR DADOS DA LICENÇA NO BACKEND
-        async function atualizarLicenca(id, dadosAtualizados) {
-            try {
-                const resposta = await fetch(`http://localhost:3000/saas/barbearias/${id}`, {
-                    method: 'PATCH',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(dadosAtualizados)
-                });
+        // AJUSTAR DIA DE VENCIMENTO E VALOR DA LICENÇA
+        function editarConfig(id) {
+            const cliente = clientesSaaS.find(c => c.id === id);
+            if (!cliente) return;
 
-                if (resposta.ok) {
-                    carregarPainelMaster();
-                } else {
-                    alert("Erro ao atualizar licença.");
-                }
-            } catch (erro) {
-                console.error("Erro na requisição:", erro);
-            }
-        }
-
-        // EDITAR VALOR E VENCIMENTO
-        async function editarConfig(id, valorAtual, diaAtual) {
-            const novoValor = prompt(`Valor mensal da licença (R$):`, valorAtual);
-            const novoDia = prompt(`Dia de vencimento (5, 10, 15...):`, diaAtual);
+            const novoValor = prompt(`Valor mensal para ${cliente.barbearia} (R$):`, cliente.valor);
+            const novoDia = prompt(`Dia de vencimento (5, 10, 15, 20...):`, cliente.vencimentoDia);
 
             if (novoValor !== null && novoDia !== null) {
-                await atualizarLicenca(id, {
-                    valor_plano: parseFloat(novoValor.replace(',', '.')),
-                    vencimento_dia: parseInt(novoDia, 10)
-                });
-            }
-        }
+                const valParsed = parseFloat(novoValor.replace(',', '.'));
+                const diaParsed = parseInt(novoDia);
 
-        // CORTESIA TEMPORÁRIA
-        async function darCortesiaTemporaria(id) {
-            const dias = prompt("Quantos dias de cortesia temporária?", "30");
-            if (dias) {
-                const dataExp = new Date();
-                dataExp.setDate(dataExp.getDate() + parseInt(dias));
-                const dataStr = dataExp.toISOString().split('T')[0];
-
-                await atualizarLicenca(id, {
-                    status: 'cortesia_temporaria',
-                    expira_em: dataStr
-                });
-            }
-        }
-
-        function gerarPixCobranca(nomeBarbearia, valor) {
-            alert(`[Mercado Pago / Gateway]\nLink Pix gerado para ${nomeBarbearia}\nValor: R$ ${parseFloat(valor).toFixed(2).replace('.', ',')}\n\nAssim que o cliente pagar, o Webhook liberará o acesso automaticamente.`);
-        }
-
-        // BUSCAR E SALVAR FEEDBACKS NO BANCO
-        async function carregarFeedbacks() {
-            const container = document.getElementById('lista-feedbacks');
-            try {
-                const resposta = await fetch('http://localhost:3000/feedbacks');
-                const feedbacks = await resposta.json();
-
-                if (feedbacks.length === 0) {
-                    container.innerHTML = '<p style="color: var(--text-muted); font-size: 13px;">Nenhum feedback registrado.</p>';
-                    return;
+                if (!isNaN(valParsed) && !isNaN(diaParsed)) {
+                    cliente.valor = valParsed;
+                    cliente.vencimentoDia = diaParsed;
+                    renderizarClientes();
+                    alert("Configurações de licença e vencimento atualizadas com sucesso!");
+                } else {
+                    alert("Valores inválidos inseridos.");
                 }
-
-                container.innerHTML = '';
-                feedbacks.forEach(f => {
-                    const div = document.createElement('div');
-                    div.className = 'card-feedback';
-                    div.innerHTML = `
-                        <div class="autor"><span>${f.autor}</span><span class="tipo-badge">${f.tipo}</span></div>
-                        <div class="estrelas">${'⭐'.repeat(f.nota)}</div>
-                        <div class="comentario">"${f.comentario}"</div>
-                    `;
-                    container.appendChild(div);
-                });
-            } catch (erro) {
-                console.error("Erro ao carregar feedbacks:", erro);
             }
         }
 
-        async function adicionarFeedback(e) {
+        // DAR CORTESIA TEMPORÁRIA (EX: 30 DIAS DE TESTE)
+        function darCortesiaTemporaria(id) {
+            const cliente = clientesSaaS.find(c => c.id === id);
+            if (!cliente) return;
+
+            const diasGratis = prompt("Quantos dias de cortesia temporária deseja dar?", "30");
+            if (diasGratis) {
+                const dataExpiracao = new Date();
+                dataExpiracao.setDate(dataExpiracao.getDate() + parseInt(diasGratis));
+                
+                cliente.status = 'cortesia_temporaria';
+                cliente.valor = 50.00; // Valor que será cobrado após o fim
+                cliente.expiraEm = dataExpiracao.toISOString().split('T')[0];
+
+                renderizarClientes();
+                alert(`Cortesia temporária concedida com sucesso! Válida até ${cliente.expiraEm}. Após esta data, o sistema exigirá o pagamento.`);
+            }
+        }
+
+        function alterarStatus(id, novoStatus, valorOpcional) {
+            const cliente = clientesSaaS.find(c => c.id === id);
+            if (cliente) {
+                cliente.status = novoStatus;
+                cliente.expiraEm = null; // Limpa expiração se mudar para fixo
+                if (valorOpcional !== undefined) {
+                    cliente.valor = valorOpcional;
+                }
+                renderizarClientes();
+            }
+        }
+
+        function gerarPixCobranca(id) {
+            const cliente = clientesSaaS.find(c => c.id === id);
+            if (!cliente) return;
+            alert(`[Cobrança Pix]\nLink gerado para ${cliente.barbearia}\nVencimento: Dia ${cliente.vencimentoDia}\nValor: R$ ${cliente.valor.toFixed(2).replace('.', ',')}`);
+        }
+
+        function adicionarFeedback(e) {
             e.preventDefault();
             const autor = document.getElementById('fb-autor').value;
             const tipo = document.getElementById('fb-tipo').value;
@@ -385,18 +347,25 @@
             const comentario = prompt("Digite o comentário/feedback:");
 
             if (comentario) {
-                try {
-                    await fetch('http://localhost:3000/feedbacks', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ autor, tipo, nota, comentario })
-                    });
-                    document.getElementById('fb-autor').value = '';
-                    carregarFeedbacks();
-                } catch (erro) {
-                    console.error("Erro ao salvar feedback:", erro);
-                }
+                listaFeedbacks.unshift({ id: Date.now(), autor, tipo, nota, comentario });
+                document.getElementById('fb-autor').value = '';
+                renderizarFeedbacks();
             }
+        }
+
+        function renderizarFeedbacks() {
+            const container = document.getElementById('lista-feedbacks');
+            container.innerHTML = '';
+            listaFeedbacks.forEach(f => {
+                const div = document.createElement('div');
+                div.className = 'card-feedback';
+                div.innerHTML = `
+                    <div class="autor"><span>${f.autor}</span><span class="tipo-badge">${f.tipo}</span></div>
+                    <div class="estrelas">${'⭐'.repeat(f.nota)}</div>
+                    <div class="comentario">"${f.comentario}"</div>
+                `;
+                container.appendChild(div);
+            });
         }
     </script>
 </body>

@@ -15,7 +15,6 @@
             --danger: #ef4444;
             --warning: #f59e0b;
         }
-
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-color);
@@ -23,7 +22,6 @@
             margin: 0;
             padding: 20px;
         }
-
         .header {
             max-width: 1200px;
             margin: 0 auto 20px auto;
@@ -33,13 +31,11 @@
             border-bottom: 2px solid #334155;
             padding-bottom: 15px;
         }
-
         h1 {
             color: var(--accent-color);
             margin: 0;
             font-size: 24px;
         }
-
         .btn-atualizar {
             background: var(--accent-color);
             color: #0f172a;
@@ -49,7 +45,6 @@
             font-weight: 800;
             cursor: pointer;
         }
-
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -57,7 +52,6 @@
             flex-direction: column;
             gap: 25px;
         }
-
         /* CARD DE RESUMO FINANCEIRO */
         .card-painel {
             background: linear-gradient(135deg, #1e293b, #0f172a);
@@ -67,35 +61,30 @@
             border: 1px solid #334155;
             border-left: 4px solid var(--success);
         }
-
         .card-painel h2 {
             margin-top: 0;
             font-size: 18px;
             color: var(--accent-color);
             margin-bottom: 15px;
         }
-
         .grid-faturamento {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 15px;
             text-align: center;
         }
-
         .box-fat {
             background: rgba(15, 23, 42, 0.6);
             padding: 15px;
             border-radius: 8px;
             border: 1px solid #334155;
         }
-
         .box-fat span {
             font-size: 12px;
             color: var(--text-muted);
             text-transform: uppercase;
             font-weight: 700;
         }
-
         /* PAINEL DE VENDA RÁPIDA / ENCAIXE */
         .secao-venda-rapida {
             background: var(--card-bg);
@@ -104,7 +93,6 @@
             border: 1px solid #334155;
             border-left: 4px solid var(--accent-color);
         }
-
         .form-encaixe {
             display: grid;
             grid-template-columns: 2fr 1fr auto;
@@ -112,7 +100,11 @@
             align-items: center;
             margin-top: 10px;
         }
-
+        @media(max-width: 768px) {
+            .grid-faturamento, .form-encaixe, .form-servico {
+                grid-template-columns: 1fr !important;
+            }
+        }
         /* SEÇÃO DE FOLLOW-UP */
         .secao-followup {
             background: var(--card-bg);
@@ -121,7 +113,6 @@
             border: 1px solid #334155;
             border-left: 4px solid var(--warning);
         }
-
         .btn-followup-toggle {
             background: var(--warning);
             color: #0f172a;
@@ -132,14 +123,12 @@
             cursor: pointer;
             margin-top: 10px;
         }
-
         .lista-inativos {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 12px;
             margin-top: 15px;
         }
-
         .card-inativo {
             background: #0f172a;
             border: 1px solid #334155;
@@ -149,7 +138,6 @@
             flex-direction: column;
             gap: 8px;
         }
-
         /* CRONOGRAMA SEMANAL */
         .secao-semanal {
             background: var(--card-bg);
@@ -157,14 +145,12 @@
             padding: 20px;
             border: 1px solid #334155;
         }
-
         .grid-semana {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
             gap: 15px;
             margin-top: 15px;
         }
-
         .coluna-dia {
             background: #0f172a;
             border: 1px solid #334155;
@@ -172,12 +158,10 @@
             padding: 12px;
             min-height: 250px;
         }
-
         .coluna-dia.hoje {
             border: 2px solid var(--accent-color);
             box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
         }
-
         .titulo-dia {
             font-size: 14px;
             font-weight: 800;
@@ -189,7 +173,6 @@
             display: flex;
             justify-content: space-between;
         }
-
         .card-cliente-agendado {
             background: #1e293b;
             border-radius: 6px;
@@ -198,28 +181,23 @@
             border-left: 3px solid var(--warning);
             font-size: 13px;
         }
-
         .card-cliente-agendado.concluido { border-left-color: var(--success); }
         .card-cliente-agendado.cancelado { border-left-color: var(--danger); opacity: 0.6; }
-
         .card-cliente-agendado .horario {
             font-weight: 800;
             color: var(--accent-color);
             font-size: 14px;
         }
-
         .card-cliente-agendado .nome-cliente {
             font-weight: bold;
             color: var(--text-main);
             margin: 4px 0;
         }
-
         .acoes-card {
             margin-top: 8px;
             display: flex;
             gap: 5px;
         }
-
         /* CATÁLOGO DE CORTES */
         .tabela-container {
             background: var(--card-bg);
@@ -229,26 +207,22 @@
             border: 1px solid #334155;
             overflow-x: auto;
         }
-
         table {
             width: 100%;
             border-collapse: collapse;
             text-align: left;
             font-size: 14px;
         }
-
         th {
             background: #0f172a;
             color: var(--accent-color);
             padding: 12px;
             border-bottom: 2px solid #334155;
         }
-
         td {
             padding: 12px;
             border-bottom: 1px solid #334155;
         }
-
         .btn-acao {
             border: none;
             padding: 4px 8px;
@@ -257,10 +231,8 @@
             font-weight: 700;
             font-size: 11px;
         }
-
         .btn-concluir { background: var(--success); color: white; }
         .btn-cancelar-adm { background: var(--danger); color: white; }
-
         .zap-link {
             color: #4ade80;
             text-decoration: none;
@@ -269,14 +241,12 @@
             font-size: 12px;
         }
         .zap-link:hover { text-decoration: underline; }
-
         .img-miniatura {
             width: 40px;
             height: 40px;
             object-fit: cover;
             border-radius: 6px;
         }
-
         .form-servico {
             display: grid;
             grid-template-columns: 2fr 1fr 1fr 2fr auto;
@@ -284,7 +254,6 @@
             align-items: center;
             margin-bottom: 15px;
         }
-
         input, select {
             padding: 10px;
             background: #0f172a;
@@ -293,7 +262,6 @@
             color: var(--text-main);
             font-size: 14px;
         }
-
         .btn-cadastrar {
             background: var(--success);
             color: white;
@@ -308,12 +276,11 @@
 <body>
 
     <div class="header">
-        <h1>💈 Painel de Gestão e Caixa</h1>
+        <h1>Painel de Gestão e Caixa</h1>
         <button class="btn-atualizar" onclick="carregarDados()">🔄 Atualizar Dados</button>
     </div>
 
     <div class="container">
-
         <!-- 1. RESUMO FINANCEIRO -->
         <div class="card-painel">
             <h2>💰 Relatório de Faturamento Líquido</h2>
@@ -333,7 +300,7 @@
             </div>
         </div>
 
-        <!-- 2. NOVO: VENDA RÁPIDA / ENCAIXE DE BALCÃO -->
+        <!-- 2. VENDA RÁPIDA / ENCAIXE DE BALCÃO -->
         <div class="secao-venda-rapida">
             <h2 style="color: var(--accent-color); margin: 0; font-size: 18px;">⚡ Venda Rápida / Encaixe de Balcão</h2>
             <p style="color: var(--text-muted); font-size: 13px; margin: 5px 0 10px 0;">Entrou cliente da rua sem agendamento? Lance aqui para somar direto no faturamento de hoje.</p>
@@ -342,16 +309,15 @@
                     <option value="">Selecione o serviço realizado...</option>
                 </select>
                 <input type="text" id="nome-cliente-encaixe" placeholder="Nome do Cliente (Opcional)" value="Cliente Encaixe/Balcão">
-                <button type="submit" class="btn-cadastrar">⚡ Lançar no Faturamento</button>
+                <button type="submit" class="btn-cadastrar">💵 Lançar no Faturamento</button>
             </form>
         </div>
 
         <!-- 3. SEÇÃO DE FOLLOW-UP (CLIENTES > 3 MESES) -->
         <div class="secao-followup">
-            <h2 style="color: var(--warning); margin: 0; font-size: 18px;">🎯 Campanha de Reengajamento (Follow-up)</h2>
+            <h2 style="color: var(--warning); margin: 0; font-size: 18px;">📢 Campanha de Reengajamento (Follow-up)</h2>
             <p style="color: var(--text-muted); font-size: 13px; margin: 5px 0 10px 0;">Clientes que não cortam cabelo há mais de 3 meses (+90 dias).</p>
-            <button class="btn-followup-toggle" onclick="toggleFollowUp()">🔍 Ver Clientes Inativos (+90 dias)</button>
-            
+            <button class="btn-followup-toggle" onclick="toggleFollowUp()">💬 Ver Clientes Inativos (+90 dias)</button>
             <div id="painel-inativos" style="display: none;">
                 <div class="lista-inativos" id="grid-inativos"></div>
             </div>
@@ -366,14 +332,15 @@
         <!-- 5. CATÁLOGO DE CORTES -->
         <div class="tabela-container">
             <h2 style="color: var(--accent-color); margin-top: 0; font-size: 18px;">✂️ Gerenciar Catálogo de Cortes</h2>
+            
             <form id="form-novo-servico" class="form-servico" onsubmit="cadastrarServico(event)">
                 <input type="text" id="novo-nome" placeholder="Nome do Corte" required>
-                <input type="number" step="0.01" id="novo-preco" placeholder="Preço (R$)" required>
+                <input type="text" id="novo-preco" placeholder="Preço (Ex: 50)" required>
                 <select id="nova-categoria">
                     <option value="masculino">Masculino</option>
                     <option value="feminino">Feminino</option>
                 </select>
-                <input type="text" id="nova-imagem" placeholder="URL da Foto (Opcional)">
+                <input type="file" id="servico-arquivo" accept="image/*" required>
                 <button type="submit" class="btn-cadastrar">+ Adicionar</button>
             </form>
 
@@ -392,71 +359,176 @@
                 </tbody>
             </table>
         </div>
-
     </div>
 
     <script>
+        // URL OFICIAL DA API NA NUVEM (Render)
+        const API_URL = 'https://barbearia-saas-api-9jhh.onrender.com';
+
         let listaGlobalServicos = [];
         let listaGlobalAgendamentos = [];
 
-        window.addEventListener('DOMContentLoaded', carregarDados);
+        window.addEventListener('DOMContentLoaded', () => {
+            carregarDados();
+        });
 
         function carregarDados() {
             carregarServicosAdmin();
             carregarAgendamentos();
         }
 
-        async function carregarServicosAdmin() {
-            const tbody = document.getElementById('tabela-servicos-body');
-            const selectEncaixe = document.getElementById('select-servico-encaixe');
-            try {
-                const resposta = await fetch('http://localhost:3000/servicos');
-                listaGlobalServicos = await resposta.json();
+        // 1. CARREGAR SERVIÇOS DE FORMA SEGURA
+async function carregarServicosAdmin() {
+    const tbody = document.getElementById('tabela-servicos-body');
+    const selectEncaixe = document.getElementById('select-servico-encaixe');
+    if (!tbody) return;
 
-                selectEncaixe.innerHTML = '<option value="">Selecione o serviço realizado...</option>';
-                listaGlobalServicos.forEach(s => {
-                    selectEncaixe.innerHTML += `<option value="${s.id}">${s.nome} - R$ ${parseFloat(s.preco).toFixed(2)}</option>`;
-                });
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">Buscando serviços na nuvem...</td></tr>';
 
-                if (listaGlobalServicos.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Nenhum serviço cadastrado.</td></tr>';
-                    return;
+    try {
+        const resposta = await fetch(`${API_URL}/servicos`);
+        if (!resposta.ok) throw new Error('Erro ao buscar dados do servidor');
+
+        const servicos = await resposta.json();
+        listaGlobalServicos = Array.isArray(servicos) ? servicos : (servicos.dados || servicos.servicos || []);
+
+        if (selectEncaixe) {
+            selectEncaixe.innerHTML = '<option value="">Selecione o serviço realizado...</option>';
+            listaGlobalServicos.forEach(s => {
+                selectEncaixe.innerHTML += `<option value="${s.id}">${s.nome} - R$ ${parseFloat(s.preco).toFixed(2)}</option>`;
+            });
+        }
+
+        if (listaGlobalServicos.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">Nenhum serviço cadastrado ainda.</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = '';
+        listaGlobalServicos.forEach(s => {
+            const tr = document.createElement('tr');
+            const img = s.imagem_url || 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=300';
+            const precoFormatado = Number(s.preco || 0).toFixed(2).replace('.', ',');
+
+            tr.innerHTML = `
+                <td><img src="${img}" class="img-miniatura" alt="${s.nome}"></td>
+                <td><strong style="color: var(--accent-color);">${s.nome}</strong></td>
+                <td><span style="color: var(--accent-color); font-weight: bold;">${s.categoria || 'masculino'}</span></td>
+                <td>R$ ${precoFormatado}</td>
+                <td>
+                    <button class="btn-acao btn-cancelar-adm" onclick="deletarServico(${s.id})">Excluir</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    } catch (erro) {
+        console.warn("Aviso ao carregar serviços:", erro);
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">Nenhum serviço encontrado no banco.</td></tr>';
+    }
+}
+
+// 2. CADASTRAR SERVIÇO (CONVERSÃO RÁPIDA DE IMAGEM)
+async function cadastrarServico(event) {
+    event.preventDefault();
+    
+    const nome = document.getElementById('novo-nome').value.trim();
+    const precoInput = document.getElementById('novo-preco').value.trim();
+    const categoria = document.getElementById('nova-categoria').value;
+    const inputArquivo = document.getElementById('servico-arquivo');
+    const botaoSubmit = event.target.querySelector('button[type="submit"]');
+
+    if (!nome || !precoInput) {
+        alert('⚠️ Preencha o nome e o preço!');
+        return;
+    }
+
+    let precoNumerico = parseFloat(precoInput.replace(',', '.'));
+    if (isNaN(precoNumerico)) {
+        alert('⚠️ Digite um valor numérico válido para o preço.');
+        return;
+    }
+
+    const arquivo = inputArquivo.files[0];
+    if (!arquivo) {
+        alert('⚠️ Selecione uma foto para o serviço.');
+        return;
+    }
+
+    const textoOriginal = botaoSubmit.innerHTML;
+    botaoSubmit.innerHTML = '⏳ Salvando...';
+    botaoSubmit.disabled = true;
+
+    const reader = new FileReader();
+    
+    reader.onerror = function() {
+        alert('❌ Erro ao ler a imagem.');
+        botaoSubmit.innerHTML = textoOriginal;
+        botaoSubmit.disabled = false;
+    };
+
+    reader.onload = async function(e) {
+        const imagemBase64 = e.target.result;
+
+        try {
+            const resposta = await fetch(`${API_URL}/servicos`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ 
+                    nome, 
+                    preco: Number(precoNumerico.toFixed(2)), 
+                    categoria, 
+                    imagem_url: imagemBase64 
+                })
+            });
+
+            if (resposta.ok) {
+                alert('✂️ Serviço cadastrado com sucesso!');
+                document.getElementById('form-novo-servico').reset();
+                carregarServicosAdmin();
+            } else {
+                const erroServidor = await resposta.text();
+                alert('❌ Erro ao salvar no servidor: ' + erroServidor);
+            }
+        } catch (erro) {
+            console.error("Erro:", erro);
+            alert('❌ Falha de conexão com o servidor.');
+        } finally {
+            botaoSubmit.innerHTML = textoOriginal;
+            botaoSubmit.disabled = false;
+        }
+    };
+
+    reader.readAsDataURL(arquivo);
+}
+
+        // 3. EXCLUIR SERVIÇO
+        async function deletarServico(id) {
+            if (confirm("Deseja apagar este corte do catálogo?")) {
+                try {
+                    const resposta = await fetch(`${API_URL}/servicos/${id}`, { method: 'DELETE' });
+                    if (resposta.ok) {
+                        alert("🗑️ Removido com sucesso!");
+                        carregarServicosAdmin();
+                    }
+                } catch (erro) {
+                    console.error("Erro ao excluir:", erro);
                 }
-
-                tbody.innerHTML = '';
-                listaGlobalServicos.forEach(s => {
-                    const tr = document.createElement('tr');
-                    const img = s.imagem_url || 'https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=300';
-                    tr.innerHTML = `
-                        <td><img src="${img}" class="img-miniatura" alt="${s.nome}"></td>
-                        <td><strong>${s.nome}</strong></td>
-                        <td><span style="color: var(--accent-color); font-weight: bold;">${s.categoria || 'masculino'}</span></td>
-                        <td>R$ ${parseFloat(s.preco).toFixed(2).replace('.', ',')}</td>
-                        <td>
-                            <button class="btn-acao btn-cancelar-adm" onclick="deletarServico(${s.id})">🗑️ Excluir</button>
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            } catch (erro) {
-                console.error("Erro ao carregar serviços:", erro);
             }
         }
 
-        // REGISTRAR VENDA RÁPIDA / ENCAIXE DE BALCÃO
+        // 4. REGISTRAR VENDA RÁPIDA / ENCAIXE DE BALCÃO
         async function registrarEncaixe(e) {
             e.preventDefault();
             const servicoId = document.getElementById('select-servico-encaixe').value;
-            const nomeCliente = document.getElementById('nome-cliente-encaixe').value || 'Cliente Balcão';
+            const nomeCliente = document.getElementById('nome-cliente-encaixe').value.trim() || 'Cliente Balcão';
 
             if (!servicoId) {
-                alert("Selecione um serviço para o encaixe.");
+                alert("⚠️ Selecione um serviço para o encaixe.");
                 return;
             }
 
             try {
-                // Cria um agendamento com data atual e status direto como 'concluido'
-                const resposta = await fetch('http://localhost:3000/agendamentos', {
+                const resposta = await fetch(`${API_URL}/agendamentos`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -474,70 +546,40 @@
                     carregarAgendamentos();
                     alert("⚡ Venda rápida lançada com sucesso no faturamento de hoje!");
                 } else {
-                    alert("Erro ao registrar encaixe.");
+                    alert("❌ Erro ao registrar encaixe.");
                 }
             } catch (erro) {
                 console.error("Erro ao registrar encaixe:", erro);
             }
         }
 
-        async function cadastrarServico(e) {
-            e.preventDefault();
-            const nome = document.getElementById('novo-nome').value;
-            const preco = parseFloat(document.getElementById('novo-preco').value);
-            const categoria = document.getElementById('nova-categoria').value;
-            const imagem_url = document.getElementById('nova-imagem').value;
-
-            try {
-                const resposta = await fetch('http://localhost:3000/servicos', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ nome, preco, categoria, imagem_url })
-                });
-
-                if (resposta.ok) {
-                    document.getElementById('form-novo-servico').reset();
-                    carregarServicosAdmin();
-                }
-            } catch (erro) {
-                console.error("Erro ao cadastrar serviço:", erro);
-            }
-        }
-
-        async function deletarServico(id) {
-            if (confirm("Tem certeza que deseja apagar este corte?")) {
-                try {
-                    await fetch(`http://localhost:3000/servicos/${id}`, { method: 'DELETE' });
-                    carregarServicosAdmin();
-                } catch (erro) {
-                    console.error("Erro ao excluir serviço:", erro);
-                }
-            }
-        }
-
+        // 5. CARREGAR AGENDAMENTOS
         async function carregarAgendamentos() {
             try {
-                const resposta = await fetch('http://localhost:3000/agendamentos');
-                listaGlobalAgendamentos = await resposta.json();
+                const resposta = await fetch(`${API_URL}/agendamentos`);
+                const dados = await resposta.json();
+                listaGlobalAgendamentos = Array.isArray(dados) ? dados : (dados.dados || []);
 
                 calcularFaturamento(listaGlobalAgendamentos);
                 renderizarCronogramaSemanal(listaGlobalAgendamentos);
                 processarClientesInativos(listaGlobalAgendamentos);
-
             } catch (erro) {
                 console.error("Erro ao carregar agendamentos:", erro);
             }
         }
 
+        // 6. TOGGLE FOLLOW-UP
         function toggleFollowUp() {
             const painel = document.getElementById('painel-inativos');
             painel.style.display = painel.style.display === 'none' ? 'block' : 'none';
         }
 
+        // 7. CLIENTES INATIVOS (+90 DIAS)
         function processarClientesInativos(lista) {
             const containerInativos = document.getElementById('grid-inativos');
+            if (!containerInativos) return;
+            
             containerInativos.innerHTML = '';
-
             const agora = new Date();
             const mapaClientes = {};
 
@@ -545,7 +587,6 @@
                 if ((item.status || '').toLowerCase() === 'concluido' && item.cliente_telefone !== '00000000000') {
                     const chave = item.cliente_telefone;
                     const dataAtendimento = new Date(item.data_hora);
-
                     if (!mapaClientes[chave] || dataAtendimento > mapaClientes[chave].ultimaData) {
                         mapaClientes[chave] = {
                             nome: item.cliente_nome,
@@ -566,38 +607,42 @@
                 if (diferencaTempo >= noventaDiasMs) {
                     contadorInativos++;
                     const dataFormatada = cliente.ultimaData.toLocaleDateString('pt-BR');
-                    const telefoneLimpo = cliente.telefone.replace(/\D/g,'');
-                    const mensagemZap = encodeURIComponent(`Olá ${cliente.nome}, tudo bem? Notei que já faz um tempinho (${diasSemCurtar} dias) que você não dá um trato no visual aqui na barbearia. Que tal agendar um horário esta semana? ✂️💈`);
+                    const telefoneLimpo = cliente.telefone.replace(/\D/g, '');
+                    const mensagemZap = encodeURIComponent(`Olá ${cliente.nome}, tudo bem? Notei que já faz um tempinho (${diasSemCortar} dias) que você não dá um trato no visual aqui na barbearia. Que tal agendar um horário esta semana?`);
 
                     const div = document.createElement('div');
                     div.className = 'card-inativo';
                     div.innerHTML = `
-                        <div style="font-weight: bold; color: var(--text-main);">${cliente.nome}</div>
+                        <div style="font-weight: bold; color: var(--text-main);">👤 ${cliente.nome}</div>
                         <div style="font-size: 12px; color: var(--text-muted);">Último corte: ${dataFormatada} (há ${diasSemCortar} dias)</div>
-                        <a class="zap-link" href="https://wa.me/55${telefoneLimpo}?text=${mensagemZap}" target="_blank">
-                            💬 Enviar Follow-up WhatsApp
-                        </a>
+                        <a class="zap-link" href="https://wa.me/55${telefoneLimpo}?text=${mensagemZap}" target="_blank">📱 Enviar Follow-up WhatsApp</a>
                     `;
                     containerInativos.appendChild(div);
                 }
             });
 
             if (contadorInativos === 0) {
-                containerInativos.innerHTML = '<p style="color: var(--text-muted); font-size: 13px; grid-column: 1 / -1;">Nenhum cliente inativo há mais de 3 meses encontrado.</p>';
+                containerInativos.innerHTML = '<p style="color: var(--text-muted); font-size: 13px; grid-column: 1/-1;">Nenhum cliente inativo há mais de 3 meses encontrado.</p>';
             }
         }
 
+        // 8. CRONOGRAMA SEMANAL
         function renderizarCronogramaSemanal(lista) {
             const container = document.getElementById('grid-semanal-container');
-            container.innerHTML = '';
+            if (!container) return;
 
+            container.innerHTML = '';
             const diasSemana = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
             const hojeIndice = new Date().getDay();
-            const agendamentosPorDia = { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [] };
+            const agendamentosPorDia = {0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: []};
 
             lista.forEach(item => {
-                const data = new Date(item.data_hora);
-                agendamentosPorDia[data.getDay()].push(item);
+                if (item.data_hora) {
+                    const data = new Date(item.data_hora);
+                    if (!isNaN(data.getDay())) {
+                        agendamentosPorDia[data.getDay()].push(item);
+                    }
+                }
             });
 
             diasSemana.forEach((nomeDia, i) => {
@@ -620,16 +665,18 @@
                         cardsHTML += `
                             <div class="card-cliente-agendado ${statusClass}">
                                 <div class="horario">⏰ ${hora}</div>
-                                <div class="nome-cliente">${item.cliente_nome}</div>
-                                <div style="color: var(--text-muted); font-size: 12px;">✂️ ${item.servico_nome}</div>
-                                ${item.cliente_telefone !== '00000000000' ? `
+                                <div class="nome-cliente">${item.cliente_nome || 'Cliente'}</div>
+                                <div style="color: var(--text-muted); font-size: 12px;">✂️ ${item.servico_nome || 'Corte'}</div>
+                                ${item.cliente_telefone && item.cliente_telefone !== '00000000000' ? `
                                     <a class="zap-link" href="https://wa.me/55${item.cliente_telefone.replace(/\D/g,'')}" target="_blank">📱 WhatsApp</a>
                                 ` : ''}
                                 <div class="acoes-card">
                                     ${statusClass === 'agendado' ? `
-                                        <button class="btn-acao btn-concluir" onclick="alterarStatus(${item.id}, 'concluido')">✓ Concluir</button>
+                                        <button class="btn-acao btn-concluir" onclick="alterarStatus(${item.id}, 'concluido')">Concluir</button>
                                         <button class="btn-acao btn-cancelar-adm" onclick="alterarStatus(${item.id}, 'cancelado')">✕</button>
-                                    ` : `<span style="font-size:10px; font-weight:bold; text-transform:uppercase;">${statusClass}</span>`}
+                                    ` : `
+                                        <span style="font-size: 10px; font-weight: bold; text-transform: uppercase;">${statusClass}</span>
+                                    `}
                                 </div>
                             </div>
                         `;
@@ -639,7 +686,7 @@
                 divColuna.innerHTML = `
                     <div class="titulo-dia">
                         <span>${nomeDia}</span>
-                        ${ehHoje ? '<span style="color: var(--success); font-size:10px;">HOJE</span>' : ''}
+                        ${ehHoje ? '<span style="color: var(--success); font-size: 10px;">HOJE</span>' : ''}
                     </div>
                     ${cardsHTML}
                 `;
@@ -647,6 +694,7 @@
             });
         }
 
+        // 9. CÁLCULO DE FATURAMENTO (DIA, MÊS ATUAL, MÊS PASSADO)
         function calcularFaturamento(lista) {
             let totalDia = 0;
             let totalMesAtual = 0;
@@ -671,8 +719,12 @@
                     const dataStr = dataAgendamento.toISOString().split('T')[0];
 
                     if (dataStr === hojeStr) totalDia += preco;
-                    if (dataAgendamento.getMonth() === mesAtual && dataAgendamento.getFullYear() === anoAtual) totalMesAtual += preco;
-                    if (dataAgendamento.getMonth() === mesPassado && dataAgendamento.getFullYear() === anoDoMesPassado) totalMesPassado += preco;
+                    if (dataAgendamento.getMonth() === mesAtual && dataAgendamento.getFullYear() === anoAtual) {
+                        totalMesAtual += preco;
+                    }
+                    if (dataAgendamento.getMonth() === mesPassado && dataAgendamento.getFullYear() === anoDoMesPassado) {
+                        totalMesPassado += preco;
+                    }
                 }
             });
 
@@ -681,15 +733,17 @@
             document.getElementById('faturamento-mes-passado').textContent = `R$ ${totalMesPassado.toFixed(2).replace('.', ',')}`;
         }
 
+        // 10. ALTERAR STATUS DO AGENDAMENTO
         async function alterarStatus(id, novoStatus) {
             try {
-                const resposta = await fetch(`http://localhost:3000/agendamentos/${id}`, {
+                const resposta = await fetch(`${API_URL}/agendamentos/${id}`, {
                     method: 'PATCH',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ status: novoStatus })
                 });
-
-                if (resposta.ok) carregarAgendamentos();
+                if (resposta.ok) {
+                    carregarAgendamentos();
+                }
             } catch (erro) {
                 console.error("Erro ao alterar status:", erro);
             }
